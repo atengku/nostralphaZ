@@ -1,8 +1,8 @@
-# Nostra Alpha Z | Executive Dashboard
+# Nostra Alpha Z | Executive Business Plan Creator
 
-A secure, Next.js-based operating manual and institutional pitchbook designed for zero-trust capital deployment and multi-agent synthesis.
+An interactive, BCG-modeled living business plan framework built with Next.js and deployed on Vercel. 
 
-## Deployment
-1. Drop this code into your GitHub repository.
-2. Import the repository into Vercel.
-3. Vercel will automatically detect Next.js and deploy it.
+## Usage
+1. Modify any section live in the browser.
+2. Changes auto-save to browser local storage as your master North Star.
+3. Push to GitHub for continuous Vercel deployment.
