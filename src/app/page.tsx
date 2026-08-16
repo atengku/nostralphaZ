@@ -14,86 +14,103 @@ export default function NostraDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 flex font-sans">
-      <div className="w-64 bg-slate-900 border-r border-slate-800 p-6 flex flex-col">
-        <div className="flex items-center space-x-3 mb-10">
-          <Shield className="w-8 h-8 text-blue-500" />
-          <h1 className="text-xl font-bold tracking-wider">NOSTRA<br/><span className="text-blue-500">ALPHA Z</span></h1>
+    <div className="min-h-screen bg-black text-cream flex">
+      {/* SIDEBAR */}
+      <div className="w-72 bg-deep border-r border-gold-border p-8 flex flex-col relative">
+        <div className="font-display text-2xl font-semibold text-white mb-12 tracking-wide flex items-center gap-3">
+          <Shield className="w-6 h-6 text-gold" />
+          <div>Nostra<span className="text-gold italic font-light">Alpha Z</span></div>
         </div>
-        <nav className="space-y-4 text-sm font-medium text-slate-400">
-          <button onClick={() => setActiveTab('strategy')} className={`flex items-center space-x-3 w-full p-2 rounded-md hover:bg-slate-800 hover:text-white transition ${activeTab === 'strategy' ? 'bg-slate-800 text-white' : ''}`}>
-            <Brain className="w-4 h-4" /> <span>Strategic Pools (MBB)</span>
+        
+        <nav className="space-y-3 font-mono text-[10px] uppercase tracking-[0.15em]">
+          <button onClick={() => setActiveTab('strategy')} className={`flex items-center space-x-3 w-full p-3 rounded border transition-all ${activeTab === 'strategy' ? 'bg-gold/10 border-gold/30 text-gold' : 'border-transparent text-muted hover:text-white hover:border-gold-border'}`}>
+            <Brain className="w-4 h-4" /> <span>Strategic Pools</span>
           </button>
-          <button onClick={() => setActiveTab('valuation')} className={`flex items-center space-x-3 w-full p-2 rounded-md hover:bg-slate-800 hover:text-white transition ${activeTab === 'valuation' ? 'bg-slate-800 text-white' : ''}`}>
+          <button onClick={() => setActiveTab('valuation')} className={`flex items-center space-x-3 w-full p-3 rounded border transition-all ${activeTab === 'valuation' ? 'bg-gold/10 border-gold/30 text-gold' : 'border-transparent text-muted hover:text-white hover:border-gold-border'}`}>
             <BarChart3 className="w-4 h-4" /> <span>Valuation & CLO</span>
           </button>
-          <button onClick={() => setActiveTab('pitch')} className={`flex items-center space-x-3 w-full p-2 rounded-md hover:bg-slate-800 hover:text-white transition ${activeTab === 'pitch' ? 'bg-slate-800 text-white' : ''}`}>
+          <button onClick={() => setActiveTab('pitch')} className={`flex items-center space-x-3 w-full p-3 rounded border transition-all ${activeTab === 'pitch' ? 'bg-gold/10 border-gold/30 text-gold' : 'border-transparent text-muted hover:text-white hover:border-gold-border'}`}>
             <TrendingUp className="w-4 h-4" /> <span>Neuro-Pitch Engine</span>
           </button>
         </nav>
-        <div className="mt-auto pt-8 border-t border-slate-800">
-          <div className="flex items-center space-x-2 text-xs text-slate-500">
-            <Database className="w-4 h-4" />
-            <span>PBM Escrow: <span className="text-green-400 font-bold">SECURE</span></span>
+        
+        <div className="mt-auto pt-8 border-t border-gold-border">
+          <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-widest text-muted">
+            <span className="flex items-center gap-2"><Database className="w-3 h-3" /> PBM Escrow</span>
+            <span className="text-gold">SECURE</span>
           </div>
         </div>
       </div>
-      <div className="flex-1 p-10 overflow-y-auto">
+
+      {/* MAIN CONTENT AREA */}
+      <div className="flex-1 p-12 overflow-y-auto bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-surface/40 to-black">
+        
         {activeTab === 'pitch' && (
-          <div className="max-w-4xl animate-in fade-in duration-500">
-            <h2 className="text-3xl font-light mb-2">Neuro-Pitch Generator</h2>
-            <p className="text-slate-400 mb-8">Reframing founder logic into institutional alpha using Oren Klaff mechanics.</p>
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-2xl mb-8">
-              <label className="block text-sm font-medium text-slate-400 mb-2">Raw Founder Thesis</label>
+          <div className="max-w-4xl animate-in fade-in duration-700">
+            <span className="font-mono text-[10px] text-gold uppercase tracking-[0.2em] mb-4 display-block">Phase 1: The Solution Engine</span>
+            <h2 className="font-display text-5xl font-light text-white mb-4">Neuro-Pitch <em className="text-gold">Generator.</em></h2>
+            <p className="text-muted text-lg mb-10 font-light max-w-2xl">Reframing technical logic into institutional alpha. Eradicate the GIGO paradox by rewriting your narrative for the Crocodile Brain.</p>
+            
+            <div className="bg-surface border border-gold-border p-8 shadow-2xl mb-8">
+              <label className="block font-mono text-[10px] text-gold uppercase tracking-[0.1em] mb-4">Raw Founder Thesis</label>
               <textarea 
-                className="w-full h-32 bg-slate-950 border border-slate-800 rounded-lg p-4 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4"
+                className="w-full h-40 bg-black border border-gold-border/50 p-5 text-cream focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all font-light"
                 placeholder="Paste the technical, jargon-heavy startup pitch here..."
                 value={rawPitch}
                 onChange={(e) => setRawPitch(e.target.value)}
               />
               <button 
                 onClick={handleGenerate}
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-lg transition-all flex items-center justify-center space-x-2"
+                className="mt-6 w-full bg-gold hover:bg-gold-light text-black font-mono text-xs uppercase tracking-widest py-4 font-semibold transition-all flex items-center justify-center gap-3"
               >
-                {isGenerating ? <Activity className="w-5 h-5 animate-pulse" /> : <Brain className="w-5 h-5" />}
-                <span>{isGenerating ? 'Synthesizing Institutional Logic...' : 'Generate Institutional Pitch'}</span>
+                {isGenerating ? <Activity className="w-4 h-4 animate-pulse" /> : <Brain className="w-4 h-4" />}
+                <span>{isGenerating ? 'Synthesizing Institutional Logic...' : 'Run Neuro-Pitch Engine'}</span>
               </button>
             </div>
-            <div className={`space-y-4 ${isGenerating || !rawPitch ? 'opacity-20 pointer-events-none blur-sm' : 'opacity-100'} transition-all duration-500`}>
-              <div className="bg-red-950/30 border border-red-900/50 p-5 rounded-lg border-l-4 border-l-red-500">
-                <h4 className="text-red-400 font-bold text-sm mb-1">THE PRIMAL FRAME (Survival)</h4>
-                <p className="text-slate-300 text-sm">Legacy supply chains are bleeding 14% of gross margins to structural inefficiencies. We eliminate this friction instantly.</p>
+
+            {/* MOCK RESULTS */}
+            <div className={`grid grid-cols-1 gap-4 ${isGenerating || !rawPitch ? 'opacity-20 pointer-events-none blur-[2px]' : 'opacity-100'} transition-all duration-700`}>
+              <div className="bg-surface border border-gold-border p-6 border-l-4 border-l-gold">
+                <h4 className="font-mono text-gold text-[10px] uppercase tracking-[0.15em] mb-2">1. The Primal Frame (Survival)</h4>
+                <p className="text-sm font-light leading-relaxed">Legacy supply chains are bleeding 14% of gross margins to structural inefficiencies. We eliminate this friction instantly.</p>
               </div>
-              <div className="bg-blue-950/30 border border-blue-900/50 p-5 rounded-lg border-l-4 border-l-blue-500">
-                <h4 className="text-blue-400 font-bold text-sm mb-1">THE MACRO FRAME (Institutional Alignment)</h4>
-                <p className="text-slate-300 text-sm">Aligning perfectly with the WEF 10-year digitalization mandate, our architecture captures early regulatory tailwinds, making this a generational infrastructure play.</p>
+              <div className="bg-surface border border-gold-border p-6 border-l-4 border-l-white">
+                <h4 className="font-mono text-white text-[10px] uppercase tracking-[0.15em] mb-2">2. The Macro Frame (The Prize)</h4>
+                <p className="text-sm font-light leading-relaxed">Aligning perfectly with the WEF 10-year digitalization mandate, our architecture captures early regulatory tailwinds, making this a generational infrastructure play.</p>
               </div>
-              <div className="bg-green-950/30 border border-green-900/50 p-5 rounded-lg border-l-4 border-l-green-500">
-                <h4 className="text-green-400 font-bold text-sm mb-1">THE MICRO FRAME (Unit Economics)</h4>
-                <p className="text-slate-300 text-sm">• 82% Contribution Margin (CM2)<br/>• 4-Month CAC Payback<br/>• $15k Initial ACV</p>
+              <div className="bg-surface border border-gold-border p-6 border-l-4 border-l-muted">
+                <h4 className="font-mono text-muted text-[10px] uppercase tracking-[0.15em] mb-2">3. The Micro Frame (Economics)</h4>
+                <ul className="text-sm font-light leading-relaxed space-y-1 list-none">
+                  <li><span className="text-gold mr-2">→</span>82% Contribution Margin (CM2)</li>
+                  <li><span className="text-gold mr-2">→</span>4-Month CAC Payback</li>
+                  <li><span className="text-gold mr-2">→</span>$15k Initial ACV</li>
+                </ul>
               </div>
             </div>
           </div>
         )}
+
         {activeTab === 'valuation' && (
-          <div className="max-w-4xl animate-in fade-in duration-500">
-            <h2 className="text-3xl font-light mb-2">Venture CLO Tranche Structuring</h2>
-            <p className="text-slate-400 mb-8">Downside-protected programmatic securitization.</p>
-            <div className="grid grid-cols-3 gap-6 mb-8">
-              <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl">
-                <h3 className="text-slate-400 text-xs font-bold tracking-widest uppercase mb-1">Senior Debt (AAA)</h3>
-                <p className="text-2xl font-light">$6,500,000</p>
-                <div className="mt-4 text-sm text-green-400 flex items-center"><Activity className="w-4 h-4 mr-1"/> 1st Lien / 10% Yield</div>
+          <div className="max-w-4xl animate-in fade-in duration-700">
+            <span className="font-mono text-[10px] text-gold uppercase tracking-[0.2em] mb-4 display-block">Phase 3: The End-Game</span>
+            <h2 className="font-display text-5xl font-light text-white mb-4">Venture CLO <em className="text-gold">Structuring.</em></h2>
+            <p className="text-muted text-lg mb-10 font-light max-w-2xl">Downside-protected programmatic securitization mapped to the Singapore MAS framework.</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-surface border border-gold-border p-8">
+                <h3 className="font-mono text-gold text-[10px] tracking-[0.15em] uppercase mb-4">Senior Debt (AAA)</h3>
+                <p className="font-display text-4xl font-light text-white">$6.5M</p>
+                <div className="mt-6 pt-6 border-t border-gold-border font-mono text-[9px] uppercase tracking-widest text-muted">1st Lien · 10% Yield</div>
               </div>
-              <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl">
-                <h3 className="text-slate-400 text-xs font-bold tracking-widest uppercase mb-1">Mezzanine Debt</h3>
-                <p className="text-2xl font-light">$2,000,000</p>
-                <div className="mt-4 text-sm text-blue-400 flex items-center"><Activity className="w-4 h-4 mr-1"/> 2nd Lien / 16% Yield</div>
+              <div className="bg-surface border border-gold-border p-8">
+                <h3 className="font-mono text-white text-[10px] tracking-[0.15em] uppercase mb-4">Mezzanine Debt</h3>
+                <p className="font-display text-4xl font-light text-white">$2.0M</p>
+                <div className="mt-6 pt-6 border-t border-gold-border font-mono text-[9px] uppercase tracking-widest text-muted">2nd Lien · 16% Yield</div>
               </div>
-              <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl">
-                <h3 className="text-slate-400 text-xs font-bold tracking-widest uppercase mb-1">First-Loss Equity</h3>
-                <p className="text-2xl font-light">$1,500,000</p>
-                <div className="mt-4 text-sm text-red-400 flex items-center"><Activity className="w-4 h-4 mr-1"/> Subordinated Buffer</div>
+              <div className="bg-surface border border-gold-border p-8">
+                <h3 className="font-mono text-muted text-[10px] tracking-[0.15em] uppercase mb-4">First-Loss Equity</h3>
+                <p className="font-display text-4xl font-light text-white">$1.5M</p>
+                <div className="mt-6 pt-6 border-t border-gold-border font-mono text-[9px] uppercase tracking-widest text-muted">Subordinated Buffer</div>
               </div>
             </div>
           </div>
