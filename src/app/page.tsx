@@ -1,12 +1,36 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Brain, Activity, Shield, TrendingUp, BarChart3, Database } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Brain, Activity, Shield, TrendingUp, BarChart3, Database, Save } from 'lucide-react';
 
 export default function NostraDashboard() {
-  const [activeTab, setActiveTab] = useState('pitch');
+  const [activeTab, setActiveTab] = useState('strategy');
+  
+  // State for the Neuro-Pitch
   const [rawPitch, setRawPitch] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // State for the Living Business Plan Content (Loaded from Local Storage)
+  const [strategyText, setStrategyText] = useState({
+    horizon1: "Horizon 1: The Core (Pro-Sumer SaaS)\nProduct-Led Growth (PLG). Founders upload decks. We use neuro-framing to rewrite them, capturing inbound deal flow.",
+    horizon2: "Horizon 2: Adjacent (The Bloomberg Play)\nExtracting 'Expert DNA' from elite Brand Partners via Federated Learning. Building the proprietary moat.",
+    horizon3: "Horizon 3: Transformational (The Marketplace)\nDeploying PBM-backed Venture CLOs. Capturing alpha through programmatic matching and milestone escrow."
+  });
+
+  // Load saved content when the app opens
+  useEffect(() => {
+    const saved = localStorage.getItem('nostra-strategy');
+    if (saved) {
+      setStrategyText(JSON.parse(saved));
+    }
+  }, []);
+
+  // Save content whenever you type
+  const handleSaveStrategy = (key: string, value: string) => {
+    const updated = { ...strategyText, [key]: value };
+    setStrategyText(updated);
+    localStorage.setItem('nostra-strategy', JSON.stringify(updated));
+  };
 
   const handleGenerate = () => {
     setIsGenerating(true);
@@ -33,88 +57,55 @@ export default function NostraDashboard() {
             <TrendingUp className="w-4 h-4" /> <span>Neuro-Pitch Engine</span>
           </button>
         </nav>
-        
-        <div className="mt-auto pt-8 border-t border-gold-border">
-          <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-widest text-muted">
-            <span className="flex items-center gap-2"><Database className="w-3 h-3" /> PBM Escrow</span>
-            <span className="text-gold">SECURE</span>
-          </div>
-        </div>
       </div>
 
       {/* MAIN CONTENT AREA */}
       <div className="flex-1 p-12 overflow-y-auto bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-surface/40 to-black">
         
-        {activeTab === 'pitch' && (
-          <div className="max-w-4xl animate-in fade-in duration-700">
-            <span className="font-mono text-[10px] text-gold uppercase tracking-[0.2em] mb-4 display-block">Phase 1: The Solution Engine</span>
-            <h2 className="font-display text-5xl font-light text-white mb-4">Neuro-Pitch <em className="text-gold">Generator.</em></h2>
-            <p className="text-muted text-lg mb-10 font-light max-w-2xl">Reframing technical logic into institutional alpha. Eradicate the GIGO paradox by rewriting your narrative for the Crocodile Brain.</p>
-            
-            <div className="bg-surface border border-gold-border p-8 shadow-2xl mb-8">
-              <label className="block font-mono text-[10px] text-gold uppercase tracking-[0.1em] mb-4">Raw Founder Thesis</label>
-              <textarea 
-                className="w-full h-40 bg-black border border-gold-border/50 p-5 text-cream focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all font-light"
-                placeholder="Paste the technical, jargon-heavy startup pitch here..."
-                value={rawPitch}
-                onChange={(e) => setRawPitch(e.target.value)}
-              />
-              <button 
-                onClick={handleGenerate}
-                className="mt-6 w-full bg-gold hover:bg-gold-light text-black font-mono text-xs uppercase tracking-widest py-4 font-semibold transition-all flex items-center justify-center gap-3"
-              >
-                {isGenerating ? <Activity className="w-4 h-4 animate-pulse" /> : <Brain className="w-4 h-4" />}
-                <span>{isGenerating ? 'Synthesizing Institutional Logic...' : 'Run Neuro-Pitch Engine'}</span>
-              </button>
+        {/* STRATEGY TAB (NOW EDITABLE) */}
+        {activeTab === 'strategy' && (
+          <div className="max-w-5xl animate-in fade-in duration-700">
+            <div className="flex justify-between items-center mb-4">
+              <span className="font-mono text-[10px] text-gold uppercase tracking-[0.2em] display-block">Living Document</span>
+              <span className="font-mono text-[10px] text-muted flex items-center gap-2"><Save className="w-3 h-3"/> Auto-Saving to Browser</span>
             </div>
-
-            {/* MOCK RESULTS */}
-            <div className={`grid grid-cols-1 gap-4 ${isGenerating || !rawPitch ? 'opacity-20 pointer-events-none blur-[2px]' : 'opacity-100'} transition-all duration-700`}>
-              <div className="bg-surface border border-gold-border p-6 border-l-4 border-l-gold">
-                <h4 className="font-mono text-gold text-[10px] uppercase tracking-[0.15em] mb-2">1. The Primal Frame (Survival)</h4>
-                <p className="text-sm font-light leading-relaxed">Legacy supply chains are bleeding 14% of gross margins to structural inefficiencies. We eliminate this friction instantly.</p>
-              </div>
-              <div className="bg-surface border border-gold-border p-6 border-l-4 border-l-white">
-                <h4 className="font-mono text-white text-[10px] uppercase tracking-[0.15em] mb-2">2. The Macro Frame (The Prize)</h4>
-                <p className="text-sm font-light leading-relaxed">Aligning perfectly with the WEF 10-year digitalization mandate, our architecture captures early regulatory tailwinds, making this a generational infrastructure play.</p>
-              </div>
-              <div className="bg-surface border border-gold-border p-6 border-l-4 border-l-muted">
-                <h4 className="font-mono text-muted text-[10px] uppercase tracking-[0.15em] mb-2">3. The Micro Frame (Economics)</h4>
-                <ul className="text-sm font-light leading-relaxed space-y-1 list-none">
-                  <li><span className="text-gold mr-2">→</span>82% Contribution Margin (CM2)</li>
-                  <li><span className="text-gold mr-2">→</span>4-Month CAC Payback</li>
-                  <li><span className="text-gold mr-2">→</span>$15k Initial ACV</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'valuation' && (
-          <div className="max-w-4xl animate-in fade-in duration-700">
-            <span className="font-mono text-[10px] text-gold uppercase tracking-[0.2em] mb-4 display-block">Phase 3: The End-Game</span>
-            <h2 className="font-display text-5xl font-light text-white mb-4">Venture CLO <em className="text-gold">Structuring.</em></h2>
-            <p className="text-muted text-lg mb-10 font-light max-w-2xl">Downside-protected programmatic securitization mapped to the Singapore MAS framework.</p>
+            <h2 className="font-display text-5xl font-light text-white mb-10">Strategic <em className="text-gold">Value Pools.</em></h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-surface border border-gold-border p-8">
-                <h3 className="font-mono text-gold text-[10px] tracking-[0.15em] uppercase mb-4">Senior Debt (AAA)</h3>
-                <p className="font-display text-4xl font-light text-white">$6.5M</p>
-                <div className="mt-6 pt-6 border-t border-gold-border font-mono text-[9px] uppercase tracking-widest text-muted">1st Lien · 10% Yield</div>
+              {/* Editable Horizon 1 */}
+              <div className="bg-surface border border-gold-border p-6 shadow-2xl">
+                <h3 className="font-mono text-gold text-[10px] tracking-[0.15em] uppercase mb-4">Horizon 1: Core</h3>
+                <textarea 
+                  className="w-full h-48 bg-black border border-gold-border/50 p-4 text-sm text-cream focus:border-gold focus:outline-none transition-all font-light resize-none"
+                  value={strategyText.horizon1}
+                  onChange={(e) => handleSaveStrategy('horizon1', e.target.value)}
+                />
               </div>
-              <div className="bg-surface border border-gold-border p-8">
-                <h3 className="font-mono text-white text-[10px] tracking-[0.15em] uppercase mb-4">Mezzanine Debt</h3>
-                <p className="font-display text-4xl font-light text-white">$2.0M</p>
-                <div className="mt-6 pt-6 border-t border-gold-border font-mono text-[9px] uppercase tracking-widest text-muted">2nd Lien · 16% Yield</div>
+
+              {/* Editable Horizon 2 */}
+              <div className="bg-surface border border-gold-border p-6 shadow-2xl">
+                <h3 className="font-mono text-white text-[10px] tracking-[0.15em] uppercase mb-4">Horizon 2: Adjacent</h3>
+                <textarea 
+                  className="w-full h-48 bg-black border border-gold-border/50 p-4 text-sm text-cream focus:border-gold focus:outline-none transition-all font-light resize-none"
+                  value={strategyText.horizon2}
+                  onChange={(e) => handleSaveStrategy('horizon2', e.target.value)}
+                />
               </div>
-              <div className="bg-surface border border-gold-border p-8">
-                <h3 className="font-mono text-muted text-[10px] tracking-[0.15em] uppercase mb-4">First-Loss Equity</h3>
-                <p className="font-display text-4xl font-light text-white">$1.5M</p>
-                <div className="mt-6 pt-6 border-t border-gold-border font-mono text-[9px] uppercase tracking-widest text-muted">Subordinated Buffer</div>
+
+              {/* Editable Horizon 3 */}
+              <div className="bg-surface border border-gold-border p-6 shadow-2xl">
+                <h3 className="font-mono text-muted text-[10px] tracking-[0.15em] uppercase mb-4">Horizon 3: Transformational</h3>
+                <textarea 
+                  className="w-full h-48 bg-black border border-gold-border/50 p-4 text-sm text-cream focus:border-gold focus:outline-none transition-all font-light resize-none"
+                  value={strategyText.horizon3}
+                  onChange={(e) => handleSaveStrategy('horizon3', e.target.value)}
+                />
               </div>
             </div>
           </div>
         )}
+
+        {/* ... (Keep the existing Valuation and Neuro-Pitch blocks below here) ... */}
       </div>
     </div>
   );
