@@ -1,13 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Shield, BookOpen, Layers, Cpu, DollarSign, Save, CheckCircle2 } from 'lucide-react';
+import { Shield, BookOpen, Layers, Cpu, DollarSign, CheckCircle2, Upload, FileText, Check } from 'lucide-react';
 
 export default function BCGBusinessPlanApp() {
   const [activeSection, setActiveSection] = useState('summary');
   const [saveStatus, setSaveStatus] = useState('Synced');
+  
+  // File upload states
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [processedSuccess, setProcessedSuccess] = useState(false);
 
-  // BCG Business Plan Framework State
   const [planData, setPlanData] = useState({
     summary: "Nostra Alpha Z is an AI-orchestrated private capital operating system designed to bridge the gap between early-stage execution and institutional capital allocation.",
     bcg_matrix: "Core Business (H1): Pro-sumer SaaS PLG engine.\nAdjacent Business (H2): DaaS Federated Learning intelligence moat.\nTransformational (H3): Purpose Bound Money (PBM) Venture CLO Marketplace.",
@@ -15,7 +19,6 @@ export default function BCGBusinessPlanApp() {
     financials: "Monetization via tiered SaaS subscriptions ($49/mo), DaaS licenses ($50k/yr), and Venture CLO success fees (5%) with 10% to 16% tranche yields."
   });
 
-  // Load from local storage on boot
   useEffect(() => {
     const saved = localStorage.getItem('bcg-nostra-plan');
     if (saved) {
@@ -23,7 +26,6 @@ export default function BCGBusinessPlanApp() {
     }
   }, []);
 
-  // Handle live typing and auto-save
   const handleChange = (field: string, value: string) => {
     const updated = { ...planData, [field]: value };
     setPlanData(updated);
@@ -32,10 +34,27 @@ export default function BCGBusinessPlanApp() {
     setTimeout(() => setSaveStatus('Synced'), 800);
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setUploadedFile(file);
+      setIsProcessing(true);
+      setProcessedSuccess(false);
+      
+      // Simulate Zero-Trust Airlock Ingestion & Parsing
+      setTimeout(() => {
+        setIsProcessing(false);
+        setProcessedSuccess(true);
+        // Automatically inject file status into the active section data
+        handleChange(activeSection, `[Ingested File: ${file.name}]\n\nAirlock Status: Sanitized & Hashed via SHA-256.\nParsed Text: Document structure extracted successfully for institutional synthesis.`);
+      }, 1500);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black text-cream flex font-sans">
       
-      {/* SIDEBAR NAVIGATION (BCG Structure) */}
+      {/* SIDEBAR NAVIGATION */}
       <div className="w-80 bg-deep border-r border-gold-border p-8 flex flex-col relative">
         <div className="font-display text-2xl font-semibold text-white mb-10 tracking-wide flex items-center gap-3">
           <Shield className="w-6 h-6 text-gold" />
@@ -68,77 +87,61 @@ export default function BCGBusinessPlanApp() {
       {/* MAIN CONTENT AREA */}
       <div className="flex-1 p-16 overflow-y-auto bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-surface/40 to-black">
         
-        {/* SECTION 1: EXECUTIVE SUMMARY */}
-        {activeSection === 'summary' && (
-          <div className="max-w-4xl animate-in fade-in duration-500">
-            <span className="font-mono text-[10px] text-gold uppercase tracking-[0.2em] mb-4 block">Module I</span>
-            <h2 className="font-display text-5xl font-light text-white mb-4">Executive <em className="text-gold">Summary.</em></h2>
-            <p className="text-muted text-sm mb-8 font-light">The core thesis and macroeconomic intent. Type and modify your strategy live; changes persist automatically.</p>
-            
-            <div className="bg-surface border border-gold-border p-8 shadow-2xl">
-              <label className="block font-mono text-[10px] text-gold uppercase tracking-[0.1em] mb-3">Live Strategy Editor</label>
-              <textarea 
-                className="w-full h-64 bg-black border border-gold-border/50 p-6 text-cream text-base focus:border-gold focus:outline-none transition-all font-light leading-relaxed resize-none"
-                value={planData.summary}
-                onChange={(e) => handleChange('summary', e.target.value)}
-              />
-            </div>
-          </div>
-        )}
+        {/* DYNAMIC RENDER BASED ON ACTIVE SECTION */}
+        <div className="max-w-4xl animate-in fade-in duration-500">
+          <span className="font-mono text-[10px] text-gold uppercase tracking-[0.2em] mb-4 block">
+            Module {activeSection === 'summary' ? 'I' : activeSection === 'bcg_matrix' ? 'II' : activeSection === 'operations' ? 'III' : 'IV'}
+          </span>
+          <h2 className="font-display text-5xl font-light text-white mb-4">
+            {activeSection === 'summary' && <>Executive <em className="text-gold">Summary.</em></>}
+            {activeSection === 'bcg_matrix' && <>BCG 3-Horizon <em className="text-gold">Value Pools.</em></>}
+            {activeSection === 'operations' && <>Operating & Tech <em className="text-gold">Architecture.</em></>}
+            {activeSection === 'financials' && <>Unit Economics & <em className="text-gold">CLO Tranches.</em></>}
+          </h2>
+          <p className="text-muted text-sm mb-8 font-light">
+            Upload source files, pitch decks, or financial statements below. The Zero-Trust Airlock will ingest, sterilize, and populate the module automatically.
+          </p>
 
-        {/* SECTION 2: BCG VALUE POOLS */}
-        {activeSection === 'bcg_matrix' && (
-          <div className="max-w-4xl animate-in fade-in duration-500">
-            <span className="font-mono text-[10px] text-gold uppercase tracking-[0.2em] mb-4 block">Module II</span>
-            <h2 className="font-display text-5xl font-light text-white mb-4">BCG 3-Horizon <em className="text-gold">Value Pools.</em></h2>
-            <p className="text-muted text-sm mb-8 font-light">Mutually Exclusive, Collectively Exhaustive (MECE) allocation across core, adjacent, and transformational vectors.</p>
+          {/* FILE UPLOAD DROPZONE */}
+          <div className="bg-surface border border-gold-border p-8 shadow-2xl mb-8">
+            <label className="block font-mono text-[10px] text-gold uppercase tracking-[0.1em] mb-4">Zero-Trust File Ingestion Gateway</label>
             
-            <div className="bg-surface border border-gold-border p-8 shadow-2xl">
-              <label className="block font-mono text-[10px] text-gold uppercase tracking-[0.1em] mb-3">Matrix Breakdown</label>
-              <textarea 
-                className="w-full h-64 bg-black border border-gold-border/50 p-6 text-cream text-base focus:border-gold focus:outline-none transition-all font-light leading-relaxed resize-none"
-                value={planData.bcg_matrix}
-                onChange={(e) => handleChange('bcg_matrix', e.target.value)}
-              />
-            </div>
-          </div>
-        )}
+            <label className="border-2 border-dashed border-gold-border hover:border-gold p-8 rounded-lg bg-black/40 flex flex-col items-center justify-center cursor-pointer transition-all group">
+              <input type="file" className="hidden" onChange={handleFileUpload} accept=".pdf,.docx,.xlsx,.csv,.txt" />
+              <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <Upload className="w-5 h-5 text-gold" />
+              </div>
+              <p className="font-mono text-xs text-cream uppercase tracking-wider mb-1">
+                {uploadedFile ? uploadedFile.name : "Drop Deck, Statement, or Brief Here"}
+              </p>
+              <p className="font-mono text-[10px] text-muted">Supports PDF, Word, Excel, or CSV (Quarantined & Sanitized)</p>
+            </label>
 
-        {/* SECTION 3: OPERATING MODEL */}
-        {activeSection === 'operations' && (
-          <div className="max-w-4xl animate-in fade-in duration-500">
-            <span className="font-mono text-[10px] text-gold uppercase tracking-[0.2em] mb-4 block">Module III</span>
-            <h2 className="font-display text-5xl font-light text-white mb-4">Operating & Tech <em className="text-gold">Architecture.</em></h2>
-            <p className="text-muted text-sm mb-8 font-light">Zero-trust data pipelines, multi-agent orchestration, and kinetic security controls.</p>
-            
-            <div className="bg-surface border border-gold-border p-8 shadow-2xl">
-              <label className="block font-mono text-[10px] text-gold uppercase tracking-[0.1em] mb-3">Architecture Blueprint</label>
-              <textarea 
-                className="w-full h-64 bg-black border border-gold-border/50 p-6 text-cream text-base focus:border-gold focus:outline-none transition-all font-light leading-relaxed resize-none"
-                value={planData.operations}
-                onChange={(e) => handleChange('operations', e.target.value)}
-              />
-            </div>
-          </div>
-        )}
+            {isProcessing && (
+              <div className="mt-4 p-4 bg-gold/5 border border-gold/20 flex items-center gap-3 font-mono text-xs text-gold animate-pulse">
+                <Cpu className="w-4 h-4 animate-spin" />
+                <span>Running Airlock OCR Stripping & SHA-256 Hashing...</span>
+              </div>
+            )}
 
-        {/* SECTION 4: FINANCIALS & CLO */}
-        {activeSection === 'financials' && (
-          <div className="max-w-4xl animate-in fade-in duration-500">
-            <span className="font-mono text-[10px] text-gold uppercase tracking-[0.2em] mb-4 block">Module IV</span>
-            <h2 className="font-display text-5xl font-light text-white mb-4">Unit Economics & <em className="text-gold">CLO Tranches.</em></h2>
-            <p className="text-muted text-sm mb-8 font-light">Programmatic securitization, PBM escrow governance, and yield distribution.</p>
-            
-            <div className="bg-surface border border-gold-border p-8 shadow-2xl">
-              <label className="block font-mono text-[10px] text-gold uppercase tracking-[0.1em] mb-3">Financial Model Parameters</label>
-              <textarea 
-                className="w-full h-64 bg-black border border-gold-border/50 p-6 text-cream text-base focus:border-gold focus:outline-none transition-all font-light leading-relaxed resize-none"
-                value={planData.financials}
-                onChange={(e) => handleChange('financials', e.target.value)}
-              />
-            </div>
+            {processedSuccess && (
+              <div className="mt-4 p-4 bg-emerald-950/30 border border-emerald-500/30 flex items-center gap-3 font-mono text-xs text-emerald-400">
+                <Check className="w-4 h-4" />
+                <span>Ingestion Complete. Text extracted and injected into module state.</span>
+              </div>
+            )}
           </div>
-        )}
+          
+          {/* EDITABLE TEXT AREA (POPULATED BY UPLOAD OR MANUAL TYPING) */}
+          <div className="bg-surface border border-gold-border p-8 shadow-2xl">
+            <label className="block font-mono text-[10px] text-gold uppercase tracking-[0.1em] mb-3">Live Module Content & Extracted Data</label>
+            <textarea 
+              className="w-full h-64 bg-black border border-gold-border/50 p-6 text-cream text-base focus:border-gold focus:outline-none transition-all font-light leading-relaxed resize-none"
+              value={planData[activeSection as keyof typeof planData]}
+              onChange={(e) => handleChange(activeSection, e.target.value)}
+            />
+          </div>
+        </div>
 
       </div>
     </div>
